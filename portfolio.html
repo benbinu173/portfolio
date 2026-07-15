@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ben Binu Thomas — Frontend Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F5F6FA;
+    --paper-raised:#FFFFFF;
+    --ink:#141B33;
+    --ink-soft:#4A5372;
+    --ink-faint:#8B93AC;
+    --grid-line:#D6DCEA;
+    --line:#C3CBE0;
+    --accent:#FF5A36;
+    --accent-soft:#FFE4DB;
+    --blue:#2F5FED;
+    --blue-soft:#E4EAFF;
+    --mono: 'IBM Plex Mono', monospace;
+    --display: 'Space Grotesk', sans-serif;
+    --body: 'Inter', sans-serif;
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:
+      linear-gradient(var(--grid-line) 1px, transparent 1px) 0 0 / 48px 48px,
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px) 0 0 / 48px 48px,
+      var(--paper);
+    background-attachment: fixed;
+    color:var(--ink);
+    font-family:var(--body);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important; scroll-behavior:auto !important;}
+  }
+
+  a{color:inherit; text-decoration:none;}
+  ::selection{background:var(--accent); color:#fff;}
+
+  :focus-visible{outline:2px solid var(--blue); outline-offset:3px;}
+
+  .wrap{max-width:1180px; margin:0 auto; padding:0 32px;}
+
+  /* ---------- corner registration marks (signature motif) ---------- */
+  .crosshair{position:absolute; width:14px; height:14px; pointer-events:none;}
+  .crosshair::before, .crosshair::after{content:""; position:absolute; background:var(--ink-faint);}
+  .crosshair::before{top:6px; left:0; width:14px; height:1px;}
+  .crosshair::after{top:0; left:6px; width:1px; height:14px;}
+  .crosshair.tl{top:-1px; left:-1px;}
+  .crosshair.tr{top:-1px; right:-1px;}
+  .crosshair.bl{bottom:-1px; left:-1px;}
+  .crosshair.br{bottom:-1px; right:-1px;}
+
+  .sheet-label{
+    font-family:var(--mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--ink-faint);
+  }
+
+  /* ---------- nav ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(245,246,250,.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 32px; max-width:1180px; margin:0 auto;
+  }
+  .nav-id{
+    font-family:var(--mono); font-size:13px; color:var(--ink);
+    display:flex; align-items:center; gap:8px;
+  }
+  .nav-id .dot{width:7px; height:7px; border-radius:50%; background:var(--accent); flex:none;}
+  .nav-links{display:flex; gap:28px; font-family:var(--mono); font-size:12.5px; letter-spacing:.04em;}
+  .nav-links a{color:var(--ink-soft); position:relative; padding-bottom:2px;}
+  .nav-links a:hover{color:var(--ink);}
+  .nav-links a::after{content:""; position:absolute; left:0; bottom:-3px; width:0; height:1px; background:var(--accent); transition:width .2s ease;}
+  .nav-links a:hover::after{width:100%;}
+  .nav-links span{color:var(--ink-faint);}
+  @media (max-width:720px){ .nav-links{display:none;} }
+
+  /* ---------- hero / canvas ---------- */
+  .hero{position:relative; padding:88px 0 64px;}
+  .eyebrow{
+    font-family:var(--mono); font-size:12px; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--accent); margin-bottom:18px; display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{content:""; width:22px; height:1px; background:var(--accent);}
+
+  h1.title{
+    font-family:var(--display); font-weight:700;
+    font-size:clamp(38px, 6.2vw, 74px);
+    line-height:1.02; letter-spacing:-.02em; color:var(--ink);
+    max-width:14ch;
+  }
+  .title .accent-word{color:var(--accent);}
+
+  .lede{
+    margin-top:22px; max-width:52ch; font-size:17px; color:var(--ink-soft); line-height:1.65;
+  }
+
+  .hero-meta{
+    margin-top:32px; display:flex; flex-wrap:wrap; gap:10px 12px;
+    font-family:var(--mono); font-size:12.5px;
+  }
+  .chip{
+    border:1px solid var(--line); background:var(--paper-raised);
+    padding:6px 12px; border-radius:3px; color:var(--ink-soft);
+    display:flex; align-items:center; gap:7px;
+  }
+  .chip a{color:var(--ink); border-bottom:1px solid var(--line);}
+  .chip a:hover{border-color:var(--ink);}
+
+  .cta-row{display:flex; gap:14px; margin-top:36px; flex-wrap:wrap;}
+  .btn{
+    font-family:var(--mono); font-size:13px; letter-spacing:.03em;
+    padding:13px 22px; border-radius:3px; border:1px solid var(--ink);
+    display:inline-flex; align-items:center; gap:8px;
+    transition:transform .15s ease, background .15s ease, color .15s ease;
+  }
+  .btn.primary{background:var(--ink); color:var(--paper);}
+  .btn.primary:hover{background:var(--accent); border-color:var(--accent); transform:translateY(-2px);}
+  .btn.ghost{color:var(--ink); background:transparent;}
+  .btn.ghost:hover{background:var(--ink); color:var(--paper); transform:translateY(-2px);}
+
+  /* ---------- component canvas (signature) ---------- */
+  .canvas{
+    margin-top:70px; position:relative; min-height:420px;
+  }
+  .canvas-frame{
+    position:relative; border:1px dashed var(--line); border-radius:6px;
+    padding:26px; background:repeating-linear-gradient(45deg, transparent, transparent 11px, rgba(20,27,51,.02) 11px, rgba(20,27,51,.02) 12px);
+  }
+  .canvas-heading{
+    display:flex; justify-content:space-between; align-items:baseline; margin-bottom:22px;
+    flex-wrap:wrap; gap:8px;
+  }
+  .canvas-title{font-family:var(--mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint);}
+  .canvas-grid{
+    display:grid; grid-template-columns:repeat(12, 1fr); gap:16px;
+  }
+
+  .comp{
+    position:relative; background:var(--paper-raised); border:1px solid var(--line);
+    border-radius:5px; padding:16px; transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  }
+  .comp:hover{transform:translateY(-4px); box-shadow:0 14px 28px -18px rgba(20,27,51,.35); border-color:var(--ink-faint);}
+  .comp-tag{
+    position:absolute; top:-11px; left:12px; background:var(--ink); color:var(--paper);
+    font-family:var(--mono); font-size:10px; letter-spacing:.04em; padding:3px 8px; border-radius:2px;
+  }
+  .comp-tag.blue{background:var(--blue);}
+  .comp-tag.accent{background:var(--accent);}
+
+  /* comp 1: analytics chart card -> STARTERPro */
+  .c-analytics{grid-column:span 5;}
+  .bars{display:flex; align-items:flex-end; gap:8px; height:88px; margin-top:14px;}
+  .bars i{flex:1; background:linear-gradient(180deg, var(--blue), var(--blue-soft)); border-radius:2px 2px 0 0; display:block;}
+  .stat-row{display:flex; justify-content:space-between; margin-top:12px; font-family:var(--mono); font-size:11px; color:var(--ink-faint);}
+  .stat-row b{color:var(--ink); font-family:var(--body); font-weight:600; font-size:13px;}
+
+  /* comp 2: kanban card -> Vela */
+  .c-kanban{grid-column:span 4;}
+  .kanban-col{display:flex; flex-direction:column; gap:8px; margin-top:14px;}
+  .kanban-item{border:1px solid var(--line); border-radius:4px; padding:9px 10px; font-size:12.5px; background:var(--paper);}
+  .kanban-item .pill{display:inline-block; font-family:var(--mono); font-size:9.5px; padding:2px 6px; border-radius:2px; margin-bottom:6px;}
+  .pill.todo{background:var(--accent-soft); color:#B7401F;}
+  .pill.doing{background:var(--blue-soft); color:var(--blue);}
+
+  /* comp 3: chat/prompt card -> DevPilot AI */
+  .c-chat{grid-column:span 3;}
+  .chat-line{font-family:var(--mono); font-size:11px; color:var(--ink-soft); border-left:2px solid var(--line); padding-left:9px; margin-top:12px;}
+  .chat-line + .chat-line{margin-top:9px;}
+  .chat-line.me{border-color:var(--blue); color:var(--ink);}
+
+  /* comp 4: movie card row -> CineMatch */
+  .c-movie{grid-column:span 4;}
+  .poster-row{display:flex; gap:8px; margin-top:14px;}
+  .poster{flex:1; aspect-ratio:2/3; border-radius:4px; background:linear-gradient(160deg, var(--ink) 0%, var(--blue) 140%); opacity:.85; position:relative; overflow:hidden;}
+  .poster::after{content:""; position:absolute; inset:0; background:linear-gradient(180deg, transparent 55%, rgba(0,0,0,.35));}
+  .poster:nth-child(2){background:linear-gradient(160deg, var(--accent) 0%, var(--ink) 140%);}
+  .poster:nth-child(3){background:linear-gradient(160deg, var(--ink-soft) 0%, var(--blue) 140%);}
+
+  /* comp 5: form card -> auth / RBAC */
+  .c-auth{grid-column:span 5;}
+  .field{margin-top:12px;}
+  .field label{font-family:var(--mono); font-size:10.5px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.06em;}
+  .field .input{margin-top:5px; border:1px solid var(--line); border-radius:3px; height:32px; background:var(--paper);}
+  .role-tags{display:flex; gap:6px; margin-top:14px; flex-wrap:wrap;}
+  .role-tags span{font-family:var(--mono); font-size:10px; border:1px solid var(--line); border-radius:2px; padding:3px 7px; color:var(--ink-soft);}
+
+  @media (max-width:900px){
+    .c-analytics, .c-kanban, .c-chat, .c-movie, .c-auth{grid-column:span 12;}
+  }
+
+  /* ---------- sections shared ---------- */
+  section{padding:88px 0; position:relative; border-top:1px solid var(--line);}
+  .section-head{
+    display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:48px; gap:24px; flex-wrap:wrap;
+  }
+  .section-num{font-family:var(--mono); color:var(--ink-faint); font-size:13px;}
+  h2.section-title{
+    font-family:var(--display); font-weight:600; font-size:clamp(26px,3.6vw,38px); letter-spacing:-.01em;
+  }
+
+  /* ---------- profile ---------- */
+  .profile-grid{display:grid; grid-template-columns:1.1fr .9fr; gap:60px;}
+  .profile-grid p{font-size:16.5px; color:var(--ink-soft); line-height:1.75;}
+  .profile-grid p + p{margin-top:16px;}
+  .fact-list{border-top:1px solid var(--line);}
+  .fact{display:flex; justify-content:space-between; padding:14px 0; border-bottom:1px solid var(--line); font-size:14px;}
+  .fact span:first-child{font-family:var(--mono); color:var(--ink-faint); font-size:12px; text-transform:uppercase; letter-spacing:.05em;}
+  .fact span:last-child{color:var(--ink); text-align:right; font-weight:500;}
+  @media (max-width:840px){ .profile-grid{grid-template-columns:1fr;} }
+
+  /* ---------- skills ---------- */
+  .skill-groups{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line);}
+  .skill-card{background:var(--paper-raised); padding:26px 24px;}
+  .skill-card h3{font-family:var(--mono); font-size:11.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--accent); margin-bottom:16px;}
+  .tag-cloud{display:flex; flex-wrap:wrap; gap:8px;}
+  .tag-cloud span{font-size:13px; color:var(--ink-soft); padding:5px 10px; border:1px solid var(--line); border-radius:3px; background:var(--paper);}
+  @media (max-width:840px){ .skill-groups{grid-template-columns:1fr;} }
+
+  /* ---------- experience ---------- */
+  .job{display:grid; grid-template-columns:220px 1fr; gap:40px; padding:34px 0; border-bottom:1px solid var(--line);}
+  .job:first-child{padding-top:0;}
+  .job-meta{font-family:var(--mono); font-size:12.5px; color:var(--ink-faint);}
+  .job-meta .role{font-family:var(--display); font-weight:600; font-size:19px; color:var(--ink); margin-top:8px; display:block;}
+  .job ul{padding-left:18px; color:var(--ink-soft); font-size:15px; line-height:1.7;}
+  .job ul li{margin-bottom:10px;}
+  .job ul li::marker{color:var(--accent);}
+  .subproject{
+    margin-top:22px; border-left:2px solid var(--blue); padding:14px 0 14px 18px; background:var(--blue-soft);
+    border-radius:0 4px 4px 0;
+  }
+  .subproject h4{font-family:var(--mono); font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:var(--blue); margin-bottom:8px;}
+  .subproject p{font-size:14.5px; color:var(--ink-soft); line-height:1.65;}
+  @media (max-width:720px){ .job{grid-template-columns:1fr;} }
+
+  /* ---------- projects ---------- */
+  .project-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
+  .project{
+    position:relative; border:1px solid var(--line); border-radius:6px; padding:26px 24px 24px;
+    background:var(--paper-raised); display:flex; flex-direction:column; height:100%;
+    transition:border-color .2s ease, transform .2s ease, box-shadow .2s ease;
+    cursor:pointer;
+  }
+  .project:hover{border-color:var(--ink); transform:translateY(-5px); box-shadow:0 18px 32px -20px rgba(20,27,51,.35);}
+  .project-top{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px;}
+  .project-name{font-family:var(--display); font-weight:600; font-size:20px;}
+  .project-index{font-family:var(--mono); font-size:11px; color:var(--ink-faint);}
+  .project p{color:var(--ink-soft); font-size:14.5px; line-height:1.65; margin-bottom:16px; flex:1;}
+  .stack-row{display:flex; flex-wrap:wrap; gap:6px; margin-bottom:18px;}
+  .stack-row span{font-family:var(--mono); font-size:10px; padding:4px 8px; border-radius:2px; background:var(--paper); border:1px solid var(--line); color:var(--ink-soft);}
+  .project-link{
+    font-family:var(--mono); font-size:12px; letter-spacing:.03em; color:var(--ink);
+    display:inline-flex; align-items:center; gap:7px; padding-top:14px; border-top:1px solid var(--line);
+    margin-top:auto;
+  }
+  .project-link .arrow{transition:transform .2s ease; display:inline-block;}
+  .project:hover .project-link{color:var(--accent);}
+  .project:hover .project-link .arrow{transform:translate(3px,-3px);}
+  @media (max-width:940px){ .project-grid{grid-template-columns:1fr;} }
+
+  /* ---------- education ---------- */
+  .edu-row{display:flex; justify-content:space-between; padding:22px 0; border-bottom:1px solid var(--line); gap:20px; flex-wrap:wrap;}
+  .edu-row:last-child{border-bottom:none;}
+  .edu-school{font-family:var(--display); font-weight:600; font-size:18px;}
+  .edu-degree{color:var(--ink-soft); font-size:14.5px; margin-top:4px;}
+  .edu-years{font-family:var(--mono); font-size:12.5px; color:var(--ink-faint); white-space:nowrap;}
+
+  /* ---------- footer / contact ---------- */
+  footer{padding:90px 0 50px; border-top:1px solid var(--line);}
+  .contact-title{
+    font-family:var(--display); font-weight:700; font-size:clamp(34px,5vw,56px); letter-spacing:-.02em;
+    max-width:16ch; line-height:1.05;
+  }
+  .contact-title span{color:var(--accent);}
+  .contact-links{display:flex; flex-wrap:wrap; gap:14px; margin-top:36px;}
+  .foot-bottom{
+    margin-top:70px; display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;
+    font-family:var(--mono); font-size:11.5px; color:var(--ink-faint); border-top:1px solid var(--line); padding-top:20px;
+  }
+
+  .reveal{opacity:0; transform:translateY(18px); transition:opacity .6s ease, transform .6s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="nav">
+    <div class="nav-id"><span class="dot"></span>BEN_BINU_THOMAS.SPEC</div>
+    <div class="nav-links">
+      <a href="#profile">01 <span>/ Profile</span></a>
+      <a href="#skills">02 <span>/ Stack</span></a>
+      <a href="#experience">03 <span>/ Experience</span></a>
+      <a href="#projects">04 <span>/ Projects</span></a>
+      <a href="#contact">05 <span>/ Contact</span></a>
+    </div>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <!-- HERO -->
+  <section class="hero" style="border-top:none;" id="top">
+    <div class="eyebrow">Frontend Engineer — React / Full-Stack</div>
+    <h1 class="title">Building interfaces that <span class="accent-word">hold up</span> at enterprise scale.</h1>
+    <p class="lede">Ben Binu Thomas — frontend engineer at Abacies Logiciels, shipping production CRM software for the insurance industry across React web and Kotlin/Jetpack Compose Android, on top of a full-stack MERN background.</p>
+
+    <div class="hero-meta">
+      <div class="chip">📍 Kochi, Kerala, IN</div>
+      <div class="chip"><a href="mailto:benbinu173@gmail.com">benbinu173@gmail.com</a></div>
+      <div class="chip"><a href="tel:+917994757246">+91 79947 57246</a></div>
+      <div class="chip"><a href="https://github.com/benbinu173" target="_blank" rel="noopener">github.com/benbinu173</a></div>
+      <div class="chip"><a href="https://linkedin.com/in/benbinuthomas" target="_blank" rel="noopener">in/benbinuthomas</a></div>
+    </div>
+
+    <div class="cta-row">
+      <a class="btn primary" href="#projects">View projects →</a>
+      <a class="btn ghost" href="#contact">Get in touch</a>
+    </div>
+
+    <!-- SIGNATURE: component canvas -->
+    <div class="canvas reveal">
+      <div class="canvas-frame">
+        <div class="canvas-heading">
+          <span class="canvas-title">// components shipped in production — not mockups</span>
+          <span class="sheet-label">CANVAS 01 / 05</span>
+        </div>
+        <div class="canvas-grid">
+
+          <div class="comp c-analytics">
+            <span class="comp-tag blue">STARTERPro · Dashboard</span>
+            <div style="font-family:var(--mono); font-size:11px; color:var(--ink-faint);">Analytics.tsx</div>
+            <div class="bars">
+              <i style="height:42%"></i><i style="height:68%"></i><i style="height:38%"></i>
+              <i style="height:85%"></i><i style="height:55%"></i><i style="height:72%"></i><i style="height:30%"></i>
+            </div>
+            <div class="stat-row"><span>Policies YTD<br><b>18,240</b></span><span>Conversion<br><b>+12.4%</b></span></div>
+          </div>
+
+          <div class="comp c-kanban">
+            <span class="comp-tag">Vela · Board</span>
+            <div style="font-family:var(--mono); font-size:11px; color:var(--ink-faint);">KanbanBoard.tsx</div>
+            <div class="kanban-col">
+              <div class="kanban-item"><span class="pill doing">In progress</span><br>API auth middleware</div>
+              <div class="kanban-item"><span class="pill todo">Backlog</span><br>Workspace roles</div>
+            </div>
+          </div>
+
+          <div class="comp c-chat">
+            <span class="comp-tag accent">DevPilot AI</span>
+            <div style="font-family:var(--mono); font-size:11px; color:var(--ink-faint);">PromptPanel.ts</div>
+            <div class="chat-line">explain this regex →</div>
+            <div class="chat-line me">matches ISO dates ✓</div>
+          </div>
+
+          <div class="comp c-movie">
+            <span class="comp-tag">CineMatch · Grid</span>
+            <div style="font-family:var(--mono); font-size:11px; color:var(--ink-faint);">WatchlistGrid.tsx</div>
+            <div class="poster-row"><div class="poster"></div><div class="poster"></div><div class="poster"></div></div>
+          </div>
+
+          <div class="comp c-auth">
+            <span class="comp-tag blue">STARTERPro · RBAC</span>
+            <div style="font-family:var(--mono); font-size:11px; color:var(--ink-faint);">RoleAccess.tsx</div>
+            <div class="field"><label>Assign role</label><div class="input"></div></div>
+            <div class="role-tags"><span>Admin</span><span>Agency</span><span>Agent</span><span>Support</span></div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROFILE -->
+  <section id="profile">
+    <div class="section-head">
+      <div>
+        <div class="section-num">01 / Profile</div>
+        <h2 class="section-title">Who's building this</h2>
+      </div>
+      <span class="sheet-label">SHEET 01</span>
+    </div>
+    <div class="profile-grid">
+      <div class="reveal">
+        <p>Frontend engineer with 1+ year of professional experience building enterprise React.js CRM applications — skilled in REST API integration, reusable component architecture, and Agile delivery.</p>
+        <p>Also experienced in full-stack MERN development and Android with Jetpack Compose, with a track record of shipping production-ready features across web and mobile platforms.</p>
+      </div>
+      <div class="fact-list reveal">
+        <div class="fact"><span>Role</span><span>Software Engineer, Abacies Logiciels</span></div>
+        <div class="fact"><span>Focus</span><span>React.js · Kotlin/Compose · MERN</span></div>
+        <div class="fact"><span>Based in</span><span>Kochi, Kerala</span></div>
+        <div class="fact"><span>Education</span><span>B.Tech CSE, 2020–2024</span></div>
+        <div class="fact"><span>REST APIs integrated</span><span>30+</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="section-head">
+      <div>
+        <div class="section-num">02 / Stack</div>
+        <h2 class="section-title">Technical skills</h2>
+      </div>
+      <span class="sheet-label">SHEET 02</span>
+    </div>
+    <div class="skill-groups reveal">
+      <div class="skill-card">
+        <h3>Languages</h3>
+        <div class="tag-cloud"><span>JavaScript</span><span>TypeScript</span><span>HTML5</span><span>CSS3</span><span>Kotlin</span><span>Python</span></div>
+      </div>
+      <div class="skill-card">
+        <h3>Frontend</h3>
+        <div class="tag-cloud"><span>React.js</span><span>Angular</span><span>Redux Toolkit</span><span>React Router</span><span>Tailwind CSS</span><span>Bootstrap</span><span>Axios</span></div>
+      </div>
+      <div class="skill-card">
+        <h3>Backend &amp; Data</h3>
+        <div class="tag-cloud"><span>Node.js</span><span>Express.js</span><span>MongoDB</span><span>Firebase</span></div>
+      </div>
+      <div class="skill-card">
+        <h3>Android</h3>
+        <div class="tag-cloud"><span>Jetpack Compose</span><span>MVVM</span><span>Hilt</span><span>Retrofit</span><span>Coroutines</span></div>
+      </div>
+      <div class="skill-card">
+        <h3>Tools</h3>
+        <div class="tag-cloud"><span>Git</span><span>GitHub</span><span>Postman</span><span>Vercel</span><span>Render</span><span>Netlify</span></div>
+      </div>
+      <div class="skill-card">
+        <h3>Concepts</h3>
+        <div class="tag-cloud"><span>REST APIs</span><span>JWT Auth</span><span>Responsive Design</span><span>State Management</span><span>Agile</span><span>RBAC</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div class="section-head">
+      <div>
+        <div class="section-num">03 / Experience</div>
+        <h2 class="section-title">Where the work happens</h2>
+      </div>
+      <span class="sheet-label">SHEET 03</span>
+    </div>
+
+    <div class="job reveal">
+      <div class="job-meta">
+        Jun 2025 — Present
+        <span class="role">Abacies Logiciels</span>
+        Software Engineer
+      </div>
+      <div>
+        <ul>
+          <li>Developed and maintained <strong>STARTERPro</strong>, a production CRM platform for the insurance industry, contributing to both Android (Kotlin, Jetpack Compose) and React-based web applications deployed on AWS.</li>
+          <li>Designed and implemented enterprise modules including dashboards, analytics, expense reporting, subscriptions, lead management, ticketing, user roles, agencies, Power Dialer, marketplace, email marketing, SMS campaigns, client follow-up, file management, and application settings.</li>
+          <li>Integrated 30+ REST APIs using Retrofit and Axios while implementing MVVM architecture, Hilt dependency injection, Repository Pattern, Coroutines, StateFlow, DataStore, Room, and centralized state management.</li>
+          <li>Developed interactive reporting dashboards with financial analytics, charts, graphs, pagination, and dynamic filtering using YCharts and Jetpack Compose.</li>
+          <li>Improved scalability, UI consistency, and maintainability by building reusable components and standardizing enterprise design systems across Android and React applications.</li>
+        </ul>
+
+        <div class="subproject">
+          <h4>Project · Postify — AI-powered social media management platform</h4>
+          <p>Developed the complete React.js frontend for a content management platform targeting content creators: responsive dashboards, authentication, content planning, marketing calendar, theme management, image generation, and caption management. Built with React.js, Tailwind CSS, React Router, Axios, and React Big Calendar.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="section-head">
+      <div>
+        <div class="section-num">04 / Projects</div>
+        <h2 class="section-title">Independent builds</h2>
+      </div>
+      <span class="sheet-label">SHEET 04</span>
+    </div>
+
+    <div class="project-grid">
+      <a class="project reveal" href="https://mern-saas-frontend.vercel.app/" target="_blank" rel="noopener">
+        <div class="project-top"><span class="project-name">Vela</span><span class="project-index">01</span></div>
+        <p>MERN SaaS project management platform with workspace management, Kanban task boards, team collaboration, and JWT-based authentication with role-based access control (Admin/Member). Reusable React components via Hooks and React Router, with a Node/Express/MongoDB backend handling auth, CRUD, and data persistence.</p>
+        <div class="stack-row"><span>React.js</span><span>Node.js</span><span>Express.js</span><span>MongoDB</span><span>JWT</span></div>
+        <span class="project-link">View live project <span class="arrow">↗</span></span>
+      </a>
+
+      <a class="project reveal" href="https://devpilot-frontend-5lzh.onrender.com/" target="_blank" rel="noopener">
+        <div class="project-top"><span class="project-name">DevPilot AI</span><span class="project-index">02</span></div>
+        <p>AI-powered developer productivity platform for code explanation, debugging, code generation, API testing, and prompt management. Angular + TypeScript frontend with RxJS, integrating Groq AI APIs for code assistance, SQL generation, regex generation, and code conversion. Node/Express/MongoDB backend manages auth, chat history, and prompt templates.</p>
+        <div class="stack-row"><span>Angular</span><span>TypeScript</span><span>Node.js</span><span>MongoDB</span><span>Groq API</span></div>
+        <span class="project-link">View live project <span class="arrow">↗</span></span>
+      </a>
+
+      <a class="project reveal" href="https://cinematch-frontend-l34a.vercel.app/" target="_blank" rel="noopener">
+        <div class="project-top"><span class="project-name">CineMatch</span><span class="project-index">03</span></div>
+        <p>MERN movie discovery and watchlist platform for browsing trending movies and TV shows, searching content, and viewing details. Reusable React components integrate the TMDb API; a Node/Express/MongoDB backend handles authentication and personalized watchlists.</p>
+        <div class="stack-row"><span>React.js</span><span>Node.js</span><span>MongoDB</span><span>TMDb API</span></div>
+        <span class="project-link">View live project <span class="arrow">↗</span></span>
+      </a>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section id="education">
+    <div class="section-head">
+      <div>
+        <div class="section-num">05 / Education</div>
+        <h2 class="section-title">Foundations</h2>
+      </div>
+      <span class="sheet-label">SHEET 05</span>
+    </div>
+    <div class="reveal">
+      <div class="edu-row">
+        <div>
+          <div class="edu-school">Mar Baselios College of Engineering and Technology, Trivandrum</div>
+          <div class="edu-degree">B.Tech in Computer Science and Engineering</div>
+        </div>
+        <div class="edu-years">2020 — 2024</div>
+      </div>
+      <div class="edu-row">
+        <div>
+          <div class="edu-school">United Indian School, Kuwait</div>
+          <div class="edu-degree">Higher Secondary Education (CBSE) — 87%</div>
+        </div>
+        <div class="edu-years">2018 — 2020</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer id="contact">
+  <div class="wrap">
+    <div class="section-num">06 / Contact</div>
+    <h2 class="contact-title" style="margin-top:14px;">Have a build in mind? <span>Let's talk.</span></h2>
+    <div class="contact-links">
+      <a class="btn primary" href="mailto:benbinu173@gmail.com">Email — benbinu173@gmail.com</a>
+      <a class="btn ghost" href="https://github.com/benbinu173" target="_blank" rel="noopener">GitHub</a>
+      <a class="btn ghost" href="https://linkedin.com/in/benbinuthomas" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="btn ghost" href="tel:+917994757246">+91 79947 57246</a>
+    </div>
+    <div class="foot-bottom">
+      <span>BEN BINU THOMAS — FRONTEND ENGINEER — KOCHI, KERALA</span>
+      <span>SPEC REV. 2026 — ALL COMPONENTS PRODUCTION-TESTED</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  }, {threshold:.15});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+
+</body>
+</html>
